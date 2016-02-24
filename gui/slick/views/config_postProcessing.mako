@@ -103,7 +103,7 @@
                             </label>
                             <label class="nocheck">
                                 <span class="component-title">&nbsp;</span>
-                                <span class="component-desc">comma seperated list of extensions SickRage ignores when Post Processing</span>
+                                <span class="component-desc">comma seperated list of extensions or filename globs SickRage ignores when Post Processing</span>
                             </label>
                         </div>
                         <div class="field-pair">
@@ -112,6 +112,8 @@
                                 <span class="component-title">Postpone if no subtitle</span>
                                 <span class="component-desc">Wait to process a file until subtitles are present</span>
                                 <span class="component-desc">Language names are allowed in subtitle filename (en.srt, pt-br.srt, ita.srt, etc.)</span>
+                                <span class="component-desc">&nbsp;</span>
+                                <span class="component-desc"><b>NOTE:</b> Automatic post processor must be disabled</span>
                             </label>
                         </div>
                         <div class="field-pair">

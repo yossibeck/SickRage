@@ -37,7 +37,7 @@ from github import Github
 
 from sickbeard import metadata
 from sickbeard import providers
-from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
+from sickbeard.config import CheckSection, check_setting_int, check_setting_str, check_setting_float, ConfigMigrator
 from sickbeard import searchBacklog, showUpdater, versionChecker, properFinder, auto_postprocessor, \
     subtitles, traktChecker
 from sickbeard import db
@@ -149,7 +149,7 @@ started = False
 ACTUAL_LOG_DIR = None
 LOG_DIR = None
 LOG_NR = 5
-LOG_SIZE = 1
+LOG_SIZE = 10.0
 
 SOCKET_TIMEOUT = None
 
@@ -351,6 +351,7 @@ PLEX_SERVER_TOKEN = None
 PLEX_CLIENT_HOST = None
 PLEX_SERVER_USERNAME = None
 PLEX_SERVER_PASSWORD = None
+
 USE_PLEX_CLIENT = False
 PLEX_CLIENT_USERNAME = None
 PLEX_CLIENT_PASSWORD = None
@@ -534,6 +535,7 @@ SUBTITLES_FINDER_FREQUENCY = 1
 SUBTITLES_MULTI = False
 SUBTITLES_EXTRA_SCRIPTS = []
 SUBTITLES_DOWNLOAD_IN_PP = False
+SUBTITLES_KEEP_ONLY_WANTED = False
 
 ADDIC7ED_USER = None
 ADDIC7ED_PASS = None
@@ -628,7 +630,7 @@ def initialize(consoleLogging=True):  # pylint: disable=too-many-locals, too-man
             GUI_NAME, HOME_LAYOUT, HISTORY_LAYOUT, DISPLAY_SHOW_SPECIALS, COMING_EPS_LAYOUT, COMING_EPS_SORT, COMING_EPS_DISPLAY_PAUSED, COMING_EPS_MISSED_RANGE, FUZZY_DATING, TRIM_ZERO, DATE_PRESET, TIME_PRESET, TIME_PRESET_W_SECONDS, THEME_NAME, \
             POSTER_SORTBY, POSTER_SORTDIR, HISTORY_LIMIT, CREATE_MISSING_SHOW_DIRS, ADD_SHOWS_WO_DIR, \
             METADATA_WDTV, METADATA_TIVO, METADATA_MEDE8ER, IGNORE_WORDS, TRACKERS_LIST, IGNORED_SUBS_LIST, REQUIRE_WORDS, CALENDAR_UNPROTECTED, CALENDAR_ICONS, NO_RESTART, \
-            USE_SUBTITLES, SUBTITLES_LANGUAGES, SUBTITLES_DIR, SUBTITLES_SERVICES_LIST, SUBTITLES_SERVICES_ENABLED, SUBTITLES_HISTORY, SUBTITLES_FINDER_FREQUENCY, SUBTITLES_MULTI, SUBTITLES_DOWNLOAD_IN_PP, EMBEDDED_SUBTITLES_ALL, SUBTITLES_EXTRA_SCRIPTS, SUBTITLES_PERFECT_MATCH, subtitlesFinderScheduler, \
+            USE_SUBTITLES, SUBTITLES_LANGUAGES, SUBTITLES_DIR, SUBTITLES_SERVICES_LIST, SUBTITLES_SERVICES_ENABLED, SUBTITLES_HISTORY, SUBTITLES_FINDER_FREQUENCY, SUBTITLES_MULTI, SUBTITLES_DOWNLOAD_IN_PP, SUBTITLES_KEEP_ONLY_WANTED, EMBEDDED_SUBTITLES_ALL, SUBTITLES_EXTRA_SCRIPTS, SUBTITLES_PERFECT_MATCH, subtitlesFinderScheduler, \
             SUBTITLES_HEARING_IMPAIRED, ADDIC7ED_USER, ADDIC7ED_PASS, LEGENDASTV_USER, LEGENDASTV_PASS, OPENSUBTITLES_USER, OPENSUBTITLES_PASS, \
             USE_FAILED_DOWNLOADS, DELETE_FAILED, ANON_REDIRECT, LOCALHOST_IP, DEBUG, DBDEBUG, DEFAULT_PAGE, PROXY_SETTING, PROXY_INDEXERS, \
             AUTOPOSTPROCESSER_FREQUENCY, SHOWUPDATE_HOUR, \
@@ -682,10 +684,12 @@ def initialize(consoleLogging=True):  # pylint: disable=too-many-locals, too-man
         ACTUAL_LOG_DIR = check_setting_str(CFG, 'General', 'log_dir', 'Logs')
         LOG_DIR = ek(os.path.normpath, ek(os.path.join, DATA_DIR, ACTUAL_LOG_DIR))
         LOG_NR = check_setting_int(CFG, 'General', 'log_nr', 5)  # Default to 5 backup file (sickrage.log.x)
-        LOG_SIZE = check_setting_int(CFG, 'General', 'log_size', 1)  # Default to max 1MB per logfile
+        LOG_SIZE = check_setting_float(CFG, 'General', 'log_size', 10.0)  # Default to max 10MB per logfile
+
         if LOG_SIZE > 100:
-            LOG_SIZE = 1
+            LOG_SIZE = 10.0
         fileLogging = True
+
         if not helpers.makeDir(LOG_DIR):
             sys.stderr.write("!!! No log folder, logging to screen only!\n")
             fileLogging = False
@@ -1181,6 +1185,7 @@ def initialize(consoleLogging=True):  # pylint: disable=too-many-locals, too-man
         SUBTITLES_FINDER_FREQUENCY = check_setting_int(CFG, 'Subtitles', 'subtitles_finder_frequency', 1)
         SUBTITLES_MULTI = bool(check_setting_int(CFG, 'Subtitles', 'subtitles_multi', 1))
         SUBTITLES_DOWNLOAD_IN_PP = bool(check_setting_int(CFG, 'Subtitles', 'subtitles_download_in_pp', 0))
+        SUBTITLES_KEEP_ONLY_WANTED = bool(check_setting_int(CFG, 'Subtitles', 'subtitles_keep_only_wanted', 0))
         SUBTITLES_EXTRA_SCRIPTS = [x.strip() for x in check_setting_str(CFG, 'Subtitles', 'subtitles_extra_scripts', '').split('|') if x.strip()]
 
         ADDIC7ED_USER = check_setting_str(CFG, 'Subtitles', 'addic7ed_username', '', censor_log=True)
@@ -1419,17 +1424,17 @@ def initialize(consoleLogging=True):  # pylint: disable=too-many-locals, too-man
                                                     silent=False)
 
         showQueueScheduler = scheduler.Scheduler(show_queue.ShowQueue(),
-                                                 cycleTime=datetime.timedelta(seconds=3),
+                                                 cycleTime=datetime.timedelta(seconds=5),
                                                  threadName="SHOWQUEUE")
 
         showUpdateScheduler = scheduler.Scheduler(showUpdater.ShowUpdater(),
-                                                  cycleTime=datetime.timedelta(hours=1),
+                                                  cycleTime=datetime.timedelta(hours=24),
                                                   threadName="SHOWUPDATER",
                                                   start_time=datetime.time(hour=SHOWUPDATE_HOUR, minute=random.randint(0, 59)))
 
         # searchers
         searchQueueScheduler = scheduler.Scheduler(search_queue.SearchQueue(),
-                                                   cycleTime=datetime.timedelta(seconds=3),
+                                                   cycleTime=datetime.timedelta(seconds=5),
                                                    threadName="SEARCHQUEUE")
 
         # TODO: update_interval should take last daily/backlog times into account!
@@ -1471,9 +1476,11 @@ def initialize(consoleLogging=True):  # pylint: disable=too-many-locals, too-man
                                                     threadName="TRAKTCHECKER",
                                                     silent=not USE_TRAKT)
 
+        update_interval = datetime.timedelta(hours=SUBTITLES_FINDER_FREQUENCY)
         subtitlesFinderScheduler = scheduler.Scheduler(subtitles.SubtitlesFinder(),
-                                                       cycleTime=datetime.timedelta(hours=SUBTITLES_FINDER_FREQUENCY),
+                                                       cycleTime=update_interval,
                                                        threadName="FINDSUBTITLES",
+                                                       run_delay=update_interval,
                                                        silent=not USE_SUBTITLES)
 
         __INITIALIZED__ = True
@@ -1634,7 +1641,7 @@ def save_config():  # pylint: disable=too-many-statements, too-many-branches
     new_config['General']['encryption_secret'] = ENCRYPTION_SECRET
     new_config['General']['log_dir'] = ACTUAL_LOG_DIR if ACTUAL_LOG_DIR else 'Logs'
     new_config['General']['log_nr'] = int(LOG_NR)
-    new_config['General']['log_size'] = int(LOG_SIZE)
+    new_config['General']['log_size'] = float(LOG_SIZE)
     new_config['General']['socket_timeout'] = SOCKET_TIMEOUT
     new_config['General']['web_port'] = WEB_PORT
     new_config['General']['web_host'] = WEB_HOST
@@ -2131,6 +2138,7 @@ def save_config():  # pylint: disable=too-many-statements, too-many-branches
     new_config['Subtitles']['subtitles_multi'] = int(SUBTITLES_MULTI)
     new_config['Subtitles']['subtitles_extra_scripts'] = '|'.join(SUBTITLES_EXTRA_SCRIPTS)
     new_config['Subtitles']['subtitles_download_in_pp'] = int(SUBTITLES_DOWNLOAD_IN_PP)
+    new_config['Subtitles']['subtitles_keep_only_wanted'] = int(SUBTITLES_KEEP_ONLY_WANTED)
     new_config['Subtitles']['addic7ed_username'] = ADDIC7ED_USER
     new_config['Subtitles']['addic7ed_password'] = helpers.encrypt(ADDIC7ED_PASS, ENCRYPTION_VERSION)
 
