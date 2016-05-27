@@ -72,7 +72,7 @@ if sys.version_info >= (2, 7, 9):
     import ssl
     ssl._create_default_https_context = ssl._create_unverified_context  # pylint: disable=protected-access
 
-import shutil_custom  # pylint: disable=import-error
+import sickrage.shutil_custom as shutil_custom
 shutil.copyfile = shutil_custom.copyfile_custom
 
 # Fix mimetypes on misconfigured systems
@@ -164,7 +164,7 @@ class SickRage(object):
         # do some preliminary stuff
         sickbeard.MY_FULLNAME = ek(os.path.normpath, ek(os.path.abspath, __file__))
         sickbeard.MY_NAME = ek(os.path.basename, sickbeard.MY_FULLNAME)
-        sickbeard.PROG_DIR = ek(os.path.dirname, sickbeard.MY_FULLNAME)
+        sickbeard.PROG_DIR = ek(os.path.dirname, sickbeard.MY_FULLNAME).split('EGG-INFO')[0]
         sickbeard.LOCALE_DIR = ek(os.path.join, sickbeard.PROG_DIR, 'locale')
         sickbeard.DATA_DIR = sickbeard.PROG_DIR
         sickbeard.MY_ARGS = sys.argv[1:]
@@ -349,7 +349,7 @@ class SickRage(object):
         self.web_options = {
             'port': int(self.start_port),
             'host': self.web_host,
-            'data_root': ek(os.path.join, sickbeard.PROG_DIR, 'gui', sickbeard.GUI_NAME),
+            'data_root': ek(os.path.join, sickbeard.PROG_DIR, 'sickrage/gui', sickbeard.GUI_NAME),
             'web_root': sickbeard.WEB_ROOT,
             'log_dir': self.log_dir,
             'username': sickbeard.WEB_USERNAME,

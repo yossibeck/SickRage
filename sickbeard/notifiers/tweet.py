@@ -30,7 +30,7 @@ except ImportError:
     from cgi import parse_qsl  # @Reimport
 
 import oauth2 as oauth
-import pythontwitter as twitter
+import twitter
 
 
 class Notifier(object):

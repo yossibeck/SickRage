@@ -1,5 +1,5 @@
 # coding=utf-8
-from feedparser.api import parse
+from feedparser import parse
 
 from sickbeard import logger
 

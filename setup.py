@@ -3,7 +3,11 @@ Use setup tools to install sickrage
 """
 import os
 from setuptools import find_packages, setup
-from babel.messages import frontend as babel
+
+try:
+    from babel.messages import frontend as babel
+except ImportError:
+    babel = None
 
 ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__)))
 
@@ -25,11 +29,41 @@ setup(
 
     license='GPLv2',
 
-    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+
+    package_data = {'sickrage': ['gui/**']},
+    packages=['sickrage', 'sickbeard'],
+
     install_requires=[
         'pytz',
+        'pygithub',
         'requests',
-        'mako'
+        'mako',
+        'babelfish',
+        'subliminal',
+        'validators',
+        'tornado',
+        'xmltodict',
+        'cachecontrol',
+        'oauth',
+        'oauth2',
+        'setuptools-git',
+        'send2trash',
+        'jsonrpclib',
+        'html5lib',
+        'hachoir_core',
+        'hachoir_metadata',
+        'hachoir_parser',
+        'feedparser',
+        'bencode',
+        'imdbpy',
+        'gntp==0.4',
+        'pynma',
+        'lockfile',
+        'twitter',
+        'configobj',
+        'markdown2'
     ],
 
     test_suite="tests",
@@ -38,8 +72,8 @@ setup(
         'nose',
         'rednose',
         'mock',
+        'vcrpy',
         'vcrpy-unittest',
-        'babel'
     ],
 
     classifiers=[
@@ -54,7 +88,7 @@ setup(
         'extract_messages': babel.extract_messages,
         'init_catalog': babel.init_catalog,
         'update_catalog': babel.update_catalog
-    },
+    } if babel else {},
 
     message_extractors={
         'gui': [
@@ -67,4 +101,6 @@ setup(
         'sickrage': [('**.py', 'python', None)],
         'sickbeard': [('**.py', 'python', None)],
     },
+
+    scripts=['SickBeard.py']
 )

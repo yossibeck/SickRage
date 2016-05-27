@@ -22,7 +22,7 @@ from __future__ import unicode_literals
 import os
 import traceback
 from imdb import _exceptions as imdb_exceptions
-from libtrakt import TraktAPI
+from sickrage.libtrakt import TraktAPI
 
 import sickbeard
 from sickbeard.common import WANTED

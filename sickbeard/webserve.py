@@ -41,7 +41,7 @@ from mako.lookup import TemplateLookup
 from mako.exceptions import RichTraceback
 from mako.runtime import UNDEFINED
 
-from tornado.routes import route
+from sickrage.routes import route
 from tornado.web import RequestHandler, HTTPError, authenticated
 from tornado.gen import coroutine
 from tornado.ioloop import IOLoop
@@ -51,10 +51,10 @@ from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 
 from dateutil import tz
-from unrar2 import RarFile
-import adba
-from libtrakt import TraktAPI
-from libtrakt.exceptions import traktException
+from sickrage.unrar2 import RarFile
+from sickrage import adba
+from sickrage.libtrakt import TraktAPI
+from sickrage.libtrakt.exceptions import traktException
 
 import sickbeard
 from sickbeard import config, sab, clients, notifiers, processTV, ui, logger, \
@@ -93,8 +93,9 @@ from sickrage.system.Shutdown import Shutdown
 mako_lookup = {}
 
 def get_lookup():
+    print ek(os.path.join, sickbeard.PROG_DIR, "sickrage/gui/" + sickbeard.GUI_NAME + "/views/")
     mako_lookup['mako'] = mako_lookup.get('mako') or TemplateLookup(
-        directories=[ek(os.path.join, sickbeard.PROG_DIR, "gui/" + sickbeard.GUI_NAME + "/views/")],
+        directories=[ek(os.path.join, sickbeard.PROG_DIR, "sickrage/gui/" + sickbeard.GUI_NAME + "/views/")],
         module_directory=ek(os.path.join, sickbeard.CACHE_DIR, 'mako'),
         strict_undefined=sickbeard.BRANCH and sickbeard.BRANCH != 'master',
         #  format_exceptions=True,

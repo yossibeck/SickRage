@@ -45,7 +45,7 @@ from contextlib import closing
 from itertools import izip, cycle
 import xml.etree.ElementTree as ET
 
-import adba
+from sickrage import adba
 import certifi
 import requests
 from requests.utils import urlparse
@@ -60,7 +60,7 @@ from sickrage.helper.encoding import ek
 from sickrage.show.Show import Show
 
 
-import shutil_custom
+from sickrage import shutil_custom
 
 
 shutil.copyfile = shutil_custom.copyfile_custom
@@ -1576,7 +1576,7 @@ def verify_freespace(src, dest, oldfile=None, method="copy"):
     # shortcut: if we are moving the file and the destination == src dir,
     # then by definition there is enough space
     if method == "move" and ek(os.stat, src).st_dev == ek(os.stat, dest if ek(os.path.exists, dest) else ek(os.path.dirname, dest)).st_dev:  # pylint: disable=no-member
-        logger.log("Process method is 'move' and src and destination are on the same device, skipping free space check", logger.INFO)
+        logger.log("Process method is 'move' and src and destination are on the same device, skipping freepace check", logger.INFO)
         return True
 
     try:

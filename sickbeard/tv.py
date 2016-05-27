@@ -66,7 +66,7 @@ from sickbeard.common import NAMING_DUPLICATE, NAMING_EXTEND, NAMING_LIMITED_EXT
     NAMING_LIMITED_EXTEND_E_PREFIXED
 
 import shutil
-import shutil_custom
+from sickrage import shutil_custom
 
 
 shutil.copyfile = shutil_custom.copyfile_custom

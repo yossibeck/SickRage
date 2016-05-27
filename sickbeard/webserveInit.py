@@ -12,7 +12,7 @@ from sickrage.helper.encoding import ek
 from tornado.web import Application, StaticFileHandler, RedirectHandler
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from tornado.routes import route
+from sickrage.routes import route
 
 
 class SRWebServer(threading.Thread):  # pylint: disable=too-many-instance-attributes

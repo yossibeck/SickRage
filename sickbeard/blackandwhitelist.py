@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with SickRage. If not, see <http://www.gnu.org/licenses/>.
 
-from adba.aniDBerrors import AniDBCommandTimeoutError
+from sickrage.adba.aniDBerrors import AniDBCommandTimeoutError
 
 import sickbeard
 from sickbeard import db, logger, helpers

@@ -28,13 +28,7 @@ import shutil
 import random
 import gettext
 
-try:
-    import pytz  # pylint: disable=unused-import
-except ImportError:
-    from pkg_resources import require
-    require('pytz')
-
-import shutil_custom
+from sickrage import shutil_custom
 
 from sickbeard.indexers import indexer_api
 from sickbeard.common import SD, SKIPPED, WANTED
@@ -92,13 +86,16 @@ CONFIG_VERSION = 8
 ENCRYPTION_VERSION = 0
 ENCRYPTION_SECRET = None
 
-PROG_DIR = '.'
+PROG_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + os.path.sep
+
+print PROG_DIR
+
 MY_FULLNAME = None
 LOCALE_DIR = 'locale'
 MY_NAME = None
 MY_ARGS = []
 SYS_ENCODING = ''
-DATA_DIR = ''
+DATA_DIR = '~/.sickrage'
 CREATEPID = False
 PIDFILE = ''
 

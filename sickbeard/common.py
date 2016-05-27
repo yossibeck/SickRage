@@ -32,7 +32,7 @@ import re
 import uuid
 import gettext
 
-from fake_useragent import settings as UA_SETTINGS, UserAgent
+from sickrage.fake_useragent import settings as UA_SETTINGS, UserAgent
 from sickbeard.numdict import NumDict
 from sickrage.helper.encoding import ek
 from sickrage.helper import video_screen_size
@@ -47,7 +47,7 @@ gettext.install('messages', unicode=1, codeset='UTF-8')
 SPOOF_USER_AGENT = False
 INSTANCE_ID = str(uuid.uuid1())
 USER_AGENT = ('Sick-Rage.CE.1/(' + platform.system() + '; ' + platform.release() + '; ' + INSTANCE_ID + ')')
-UA_SETTINGS.DB = ek(path.abspath, ek(path.join, ek(path.dirname, __file__), '../lib/fake_useragent/ua.json'))
+UA_SETTINGS.DB = ek(path.abspath, ek(path.join, ek(path.dirname, __file__), '../sickrage/fake_useragent/ua.json'))
 UA_POOL = UserAgent()
 if SPOOF_USER_AGENT:
     USER_AGENT = UA_POOL.random

@@ -45,7 +45,7 @@ from sickrage.helper.exceptions import EpisodeNotFoundException, EpisodePostProc
 from sickrage.helper.exceptions import ShowDirectoryNotFoundException
 from sickrage.show.Show import Show
 
-import adba
+from sickrage import adba
 
 
 class PostProcessor(object):  # pylint: disable=too-many-instance-attributes

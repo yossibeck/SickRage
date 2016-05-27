@@ -34,14 +34,14 @@ from sickrage.helper.common import is_sync_file, is_torrent_or_nzb_file
 from sickrage.helper.encoding import ek, ss
 from sickrage.helper.exceptions import EpisodePostProcessingFailedException, ex, FailedPostProcessingFailedException
 
-from unrar2 import RarFile
-from unrar2.rar_exceptions import FileOpenError
-from unrar2.rar_exceptions import ArchiveHeaderBroken
-from unrar2.rar_exceptions import InvalidRARArchive
-from unrar2.rar_exceptions import InvalidRARArchiveUsage
-from unrar2.rar_exceptions import IncorrectRARPassword
+from sickrage.unrar2 import RarFile
+from sickrage.unrar2.rar_exceptions import FileOpenError
+from sickrage.unrar2.rar_exceptions import ArchiveHeaderBroken
+from sickrage.unrar2.rar_exceptions import InvalidRARArchive
+from sickrage.unrar2.rar_exceptions import InvalidRARArchiveUsage
+from sickrage.unrar2.rar_exceptions import IncorrectRARPassword
 
-import shutil_custom
+from sickrage import shutil_custom
 
 shutil.copyfile = shutil_custom.copyfile_custom
 

@@ -21,7 +21,7 @@ from __future__ import unicode_literals
 
 
 from datetime import datetime
-from feedparser.util import FeedParserDict
+from feedparser import FeedParserDict
 from hachoir_parser import createParser
 
 import sickbeard

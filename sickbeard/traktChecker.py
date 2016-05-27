@@ -20,8 +20,8 @@
 import os
 import traceback
 import datetime
-from libtrakt.exceptions import traktException
-from libtrakt import TraktAPI
+from sickrage.libtrakt.exceptions import traktException
+from sickrage.libtrakt import TraktAPI
 
 import sickbeard
 from sickbeard import logger

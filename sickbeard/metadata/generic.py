@@ -37,10 +37,10 @@ from sickrage.helper.common import replace_extension, try_int
 from sickrage.helper.exceptions import ex
 from sickrage.helper.encoding import ek
 
-from tmdb_api.tmdb_api import TMDB
+from sickrage.tmdb_api.tmdb_api import TMDB
 
-import fanart as fanart_module
-from fanart.core import Request as fanartRequest
+from sickrage import fanart as fanart_module
+from sickrage.fanart.core import Request as fanartRequest
 
 
 class GenericMetadata(object):
