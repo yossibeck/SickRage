@@ -19,12 +19,11 @@ before_install:
   - cd .build && npm install --quiet && bower install && cd ..
 
 install:
-    - pip install --upgrade pip
-    - pip install --upgrade tox
+    - python setup.py install
 
 script:
   - cd .build && grunt travis && cd ..
-  - tox -v --recreate
+  - python setup.py test
 
 cache:
   directories:
